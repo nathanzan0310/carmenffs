@@ -2,7 +2,7 @@ import json
 
 import requests
 
-import config
+from helper import config
 
 
 # Function to create a Jira issue

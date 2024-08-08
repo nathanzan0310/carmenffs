@@ -1,7 +1,7 @@
 import requests
 from requests.auth import HTTPBasicAuth
 import json
-import config
+from helper import config
 
 # Jira instance and authentication details
 jira_url = config.JIRA_URL

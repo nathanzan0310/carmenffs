@@ -1,10 +1,10 @@
 import pandas as pd
-import config
+from helper import config
 from helper.getUserInfo import get_account_id_from_display_name
 from helper.issue_maker import create_issue, convert_to_adf, create_stories_for_epic
 
 # Read CSV file into pandas DataFrame
-df = pd.read_csv('test.csv')
+df = pd.read_csv('test_data/test.csv')
 
 # Assignee display name
 assignee_display_name = "Mohanapriya Swaminathan"
@@ -27,7 +27,7 @@ for index, row in df.iterrows():
         end_date = row['End Date'] if pd.notna(row['End Date']) else None
         target_date = row['Estimated Delivery date'] if pd.notna(row['Estimated Delivery date']) else None
 
-        # Prepare data for the API request
+        # Prepare prod_data for the API request
         epic_data = {
             "fields": {
                 "project": {

@@ -1,6 +1,6 @@
 import requests
 import json
-import config
+from helper import config
 from helper.getUserInfo import get_account_id_from_display_name
 
 query = {
