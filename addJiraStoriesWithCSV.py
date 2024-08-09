@@ -1,63 +1,73 @@
 import pandas as pd
 from helper import config
 from helper.getUserInfo import get_account_id_from_display_name
-from helper.issue_maker import create_issue, convert_to_adf, create_stories_for_epic
+from helper.issue_maker import create_issue, convert_to_adf, create_default_stories_for_epic
+from helper.getIssueKey import search_issue_by_title
 
+'''
+CHANGE THIS FILE PATH TO YOUR OWN FILE PATH
+'''
 # Read CSV file into pandas DataFrame
 df = pd.read_csv('test_data/test.csv')
 
-# Assignee display name
-assignee_display_name = "Mohanapriya Swaminathan"
-
-# Get account ID for the assignee
-assignee_account_id = get_account_id_from_display_name(assignee_display_name)
-if assignee_account_id is None:
-    print(f"Failed to find account ID for '{assignee_display_name}'. Exiting.")
-    exit()
 
 # Iterate over each row in df and create epics and stories
 for index, row in df.iterrows():
-    if row['Detailed Project Timeline Required']:
-        epic_name = row['Project']
-        project_key = row['Jira Project']
-        summary = epic_name
-        description = row['Scope']
-        story_points = float(row['Estimated Effort']) if pd.notna(row['Estimated Effort']) else None
-        start_date = row['Start Date'] if pd.notna(row['Start Date']) else None
-        end_date = row['End Date'] if pd.notna(row['End Date']) else None
-        target_date = row['Estimated Delivery date'] if pd.notna(row['Estimated Delivery date']) else None
+    issue_name = row['Issue Title']
+    issue_type = row['Issue Type'].lower().capitalize()
+    project_key = row['Jira Board']
+    parent_name = row['Parent Name']  # This is the epic name in case of a story
+    summary = issue_name
+    description = row['Description']
+    story_points = float(row['Story Points']) if pd.notna(row['Story Points']) else None
+    assignee_account_ID = get_account_id_from_display_name(row['Assignee Display Name']) if pd.notna(
+        row['Assignee Display Name']) else None
+    co_assignee_account_ID = get_account_id_from_display_name(row['Co-Assignee Display Name']) if pd.notna(
+        row['Co-Assignee Display Name']) else None
+    start_date = row['Start Date'] if pd.notna(row['Start Date']) else None
+    end_date = row['End Date'] if pd.notna(row['End Date']) else None
+    target_date = row['Target Date'] if pd.notna(row['Target Date']) else None
 
-        # Prepare prod_data for the API request
-        epic_data = {
-            "fields": {
-                "project": {
-                    "key": project_key
-                },
-                "summary": summary,
-                "description": convert_to_adf(description),  # Convert description to ADF
-                "issuetype": {
-                    "name": "Epic"
-                },
-                config.EPIC_NAME_FIELD_ID: epic_name,  # Epic Name
-                config.STORY_POINTS_FIELD_ID: story_points,  # Story Points
-                config.START_DATE_FIELD_ID: start_date,  # Start Date
-                config.DUE_DATE_FIELD_ID: end_date,  # End Date
-                config.TARGET_END_FIELD_ID: target_date,  # Target Date
-                "assignee": {
-                    "id": assignee_account_id  # Assign epic to assignee by account ID
-                }
+    # Search for the epic by its name if it's a story
+    parent_key = None
+    if issue_type == 'Story' and parent_name:
+        parent_key = search_issue_by_title(parent_name, project_key, issue_type='Epic')
+
+    # Prepare data for the API request
+    data = {
+        "fields": {
+            "project": {
+                "key": project_key
+            },
+            "summary": summary,
+            "description": convert_to_adf(description),  # Convert description to ADF
+            "issuetype": {
+                "name": issue_type
+            },
+            # config.ISSUE_NAME_FIELD_ID: issue_name,  # Issue Name
+            config.STORY_POINTS_FIELD_ID: story_points,  # Story Points
+            config.START_DATE_FIELD_ID: start_date,  # Start Date
+            config.DUE_DATE_FIELD_ID: end_date,  # End Date
+            config.TARGET_END_FIELD_ID: target_date,  # Target Date
+            "assignee": {
+                "id": assignee_account_ID  # Assign epic to assignee by account ID
+            },
+            config.CO_ASSIGNEE_FIELD_ID: co_assignee_account_ID,  # Co-Assignee
+            "parent": {
+                "key": parent_key  # Link to the epic using parent field
             }
         }
+    }
+    # Remove None values from data
+    data['fields'] = {k: v for k, v in data['fields'].items() if v is not None}
 
-        # Remove None values from epic_data
-        epic_data['fields'] = {k: v for k, v in epic_data['fields'].items() if v is not None}
+    # Create issue and get its key
+    issue_key = create_issue(data)
 
-        # Create the epic and get its key
-        epic_key = create_issue(epic_data)
-
+    if issue_type == 'Epic':
         # Create stories for epic if epic was created successfully
-        if epic_key:
-            create_stories_for_epic(epic_key, project_key, assignee_account_id, epic_name)
+        if issue_key and row['Default Epic Stories']:
+            create_default_stories_for_epic(issue_key, project_key, assignee_account_ID, issue_name)
 
-        # Break after the first iteration for testing purposes
-        break
+    # Break after first iteration for testing purposes
+    # break

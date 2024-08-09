@@ -19,9 +19,10 @@ HEADERS = {
     "Content-Type": "application/json"
 }
 
-# Custom field IDs for Jira instance
-EPIC_NAME_FIELD_ID = "customfield_10011"
+# Custom field IDs for my Jira instance
+ISSUE_NAME_FIELD_ID = "customfield_10011"
 STORY_POINTS_FIELD_ID = "customfield_10028"
 START_DATE_FIELD_ID = "customfield_10015"
 DUE_DATE_FIELD_ID = "duedate"
 TARGET_END_FIELD_ID = "customfield_10023"
+CO_ASSIGNEE_FIELD_ID = "customfield_10035"
