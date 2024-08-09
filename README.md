@@ -1,7 +1,7 @@
 # Jira Automation Guide
 
 This repository is meant to deal with two significant and tedious challenges faced in the frightful world of Jira
-project management: bulk operations on multiple or singular fields of Jira issues (epics, stories, bugs), and adding in large amounts of issues
+project management: bulk operations on fields of Jira issues (epics, stories, bugs), and adding in large amounts of complex issues
 at once.
 
 _**Notes**_: I created this program for the purpose of streamlining the Jira tracking process for my internship this summer of 2024, so there may be some 
@@ -9,7 +9,7 @@ functionalities missing which I did not need to use, but you may need to use. Pl
 
 
 ### Coding Environment
-You will first need to set up an environment file to store sensitive information for authentication purposes, and ***you will need to make sure that you don't push this file to a publicly visible repository***.
+You will first need to set up an environment file to store sensitive information for Jira authentication purposes, and ***you will need to make sure that you don't push this file to a publicly visible repository***.
 I used a .env file with the following information: my Jira instance URL, my Jira account's email address, and [my Jira API token (which you can learn more about here.)](https://support.atlassian.com/atlassian-account/docs/manage-api-tokens-for-your-atlassian-account/)
 
 Please also make sure your python environment is set up correctly, including python version, and all packages. 
@@ -51,6 +51,6 @@ If you ever run into a situation where you realize a whole lot of issues need to
 3. Add them in to the designated location in [bulkEditOnJQLQuery.py](bulkEditOnJQLQuery.py).
 4. Run the program with ```python3 bulkEditOnJQLQuery.py```
 
-**_Notes_**: If you want to perform an operation on an existing field, for example if your manager changed the definition of story points from 1 hour to two hours, 
+**_Notes_**: If you want to perform an operation on an existing field, for example if your manager changed the definition of story points from 1 hour to 2 hours, 
 you will need to get that particular field from the GET request before you can do that operation. I've included an example in the code.
 
