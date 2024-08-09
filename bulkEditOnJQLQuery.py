@@ -1,8 +1,10 @@
 import requests
 import json
 from helper import config
-from helper.getUserInfo import get_account_id_from_display_name
 
+'''
+ADD IN YOUR QUERY HERE
+'''
 query = {
     "jql": 'your query here',
     "maxResults": 100,
@@ -22,11 +24,13 @@ for i in response.json()["issues"]:
     key = i["key"]
     sp = i["fields"][config.STORY_POINTS_FIELD_ID]
     _url = f"{config.API_URL}/{key}"
+
+    '''
+    ADD IN THE FIELDS YOU WANT TO CHANGE HERE
+    '''
     payload = json.dumps({
         "fields": {
-            'assignee': {
-                'id': get_account_id_from_display_name('Manish')
-            }
+            '''HERE'''
         }
         # "skipScreenCheck": True
     })
