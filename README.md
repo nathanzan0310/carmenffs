@@ -26,10 +26,10 @@ I will briefly go over each data field you can use below.
 2. **Issue Type**: The type of your issue (Epic, Story, etc.). Don't worry about capitalization, it's been taken care of :)
 3. **Description**: How you will describe your issue
 4. **Jira Board**: The key of the Jira board in which you want to add your issue
-5. **Parent Name**: If you're creating a story or bug, you should include its parent name so that its not orphaned. 
+5. **Parent Name**: Parent Name. If you're creating a story or bug, you should include its parent name so that its not orphaned. 
 6. **Assignee Display Name**: The lucky person who will be assigned this issue.
 7. **Co-Assignee Display Name**: The other lucky person who will be co-assigned this issue.
-8. **Story Points**: The dreaded euphemism of all developers. How much time you'll tell your boss you spent on this project
+8. **Story Points**: The euphemism dreaded by all developers. How much time you'll tell your boss you spent on this project
 9. **Default Epic Stories**: In case you don't feel like adding in the full project breakdown, or perhaps haven't reached that stage in planning, feel 
 free to set this field to true so that the default epic stories will be created (Discovery, Design, Development, UAT, Hypercare.)
 10. **Start Date**: When you supposedly started this task.
